@@ -1,75 +1,106 @@
 # Ops-generiche
+
+## 1) Installati Virtualbox, GIT, Vagrant sul tuo Mac Book
+
+apt-get update; apt-get install -y virtualbox git vagrant
+
+## 2) Tramite Virtualbox installa una virtual machine Centos7 
+
+vim Vagrantfile --> 
+
 ```
-Ops Generiche
-```
-
-1)apt-get update; apt-get install -y virtualbox git vagrant
-
-2) vim Vagrantfile --> 
-
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
   config.vm.network :forwarded_port, guest: 80, host: 4567
 end
+```
 
+```
 cd ~/Vagrant
 
 vagrant up
 
 vagrant ssh default
+```
 
+```
 [vagrant@localhost ~]$ cat /etc/redhat-release 
 
 CentOS Linux release 7.8.2003 (Core)
+```
 
-3) [vagrant@localhost ~]$ echo "The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desktop (the latter should work for vmware_fusion, vmware_workstation and vmware_desktop)." >> prova.txt
+## 3) Crea un file con touch e inserisci delle stringhe con ">>" 
 
+```
+[vagrant@localhost ~]$ echo "The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desktop (the latter should work for vmware_fusion, vmware_workstation and vmware_desktop)." >> prova.txt
+```
 
-4) [vagrant@localhost ~]$ grep -i "virtual" prova.txt 
+## 4) Leggi un file con 'cat', Greppa una stringa a tuo piacere con 'grep'
+
+```
+[vagrant@localhost ~]$ grep -i "virtual" prova.txt 
 The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desktop (the latter should work for vmware_fusion, vmware_workstation and vmware_desktop).
+```
 
-OPPURE -->
+**OPPURE** -->
 
+```
 [vagrant@localhost ~]$ cat prova.txt | grep -i "virtual"
 The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desktop (the latter should work for vmware_fusion, vmware_workstation and vmware_desktop).
+```
 
-5) less prova.txt oppure more prova.txt
+## 5) Leggi file con vim, less e more 
 
-6) dentro virtualbox -> settings sulla macchina virtuale creata -> network -> adapter2 -> wlo1
+less prova.txt oppure more prova.txt
 
-   su nuova console:
+## 6) Raggiungi la VM installata tramite un indirizzo IP locale
 
-   ale@mint ~/Vagrant $ ssh vagrant@192.168.1.215
-   The authenticity of host '192.168.1.215 (192.168.1.215)' can't be established.
-   ECDSA key fingerprint is SHA256:Xq6hI79G5AN3CSHaw7RcM8d13UAL3hG6ifCerKWYDKw.
-   Are you sure you want to continue connecting (yes/no)? yes
-   Warning: Permanently added '192.168.1.215' (ECDSA) to the list of known hosts.
-   vagrant@192.168.1.215's password: 
-   Last login: Mon Mar  8 11:02:59 2021 from 10.0.2.2
-   [vagrant@localhost ~]$ 
+dentro virtualbox -> settings sulla macchina virtuale creata -> network -> adapter2 -> wlo1
 
-7) per disabilitare selinux:
+su nuova console:
 
-   cd /etc/selinux
+```
+ale@mint ~/Vagrant $ ssh vagrant@192.168.1.215
+The authenticity of host '192.168.1.215 (192.168.1.215)' can't be established.
+ECDSA key fingerprint is SHA256:Xq6hI79G5AN3CSHaw7RcM8d13UAL3hG6ifCerKWYDKw.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.1.215' (ECDSA) to the list of known hosts.
+vagrant@192.168.1.215's password: 
+Last login: Mon Mar  8 11:02:59 2021 from 10.0.2.2
+[vagrant@localhost ~]$ 
+```
 
-   ho editato il file config
+## 7) Disabilita Selinux 
 
-   SELINUX=disabled
-   
-   ho fatto il reboot della macchina -->
+**per disabilitare selinux**:
 
-   [vagrant@localhost ~]$ getenforce
-   Disabled
- 
-   [vagrant@localhost ~]$ sestatus
-   SELinux status:                 disabled
+cd /etc/selinux
 
-8) sudo yum install -y httpd
+ho editato il file config
 
-   sudo systemctl start httpd
+SELINUX=disabled
 
-   sudo systemctl enable httpd
+ho fatto il reboot della macchina -->
 
+```
+[vagrant@localhost ~]$ getenforce
+Disabled
+
+[vagrant@localhost ~]$ sestatus
+SELinux status:                 disabled
+```
+
+## 8) Installa un Apache Webserver (httpd) ed esponi una pagina che dica "Hello World". Alla fine dell'esercizio dal tuo browser potrai fare http://<ip_della_tua_macchina> e visualizzare il sito web.
+
+```
+sudo yum install -y httpd
+
+sudo systemctl start httpd
+
+sudo systemctl enable httpd
+```
+
+```
 [vagrant@localhost ~]$ systemctl status httpd
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
@@ -85,7 +116,9 @@ The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desk
            ├─1015 /usr/sbin/httpd -DFOREGROUND
            ├─1016 /usr/sbin/httpd -DFOREGROUND
            └─1017 /usr/sbin/httpd -DFOREGROUND
+```
 
+```
 [root@localhost html]# history
     1  pwd
     2  cd /var/www/
@@ -96,8 +129,10 @@ The following providers are enabled: virtualbox, libvirt, hyperv and vmware_desk
     7  cat index.html 
     8  systemctl restart
     9  systemctl restart httpd
+```
 
+```
 [vagrant@localhost html]$ curl http://192.168.1.215
 hello world
-
+```
 
