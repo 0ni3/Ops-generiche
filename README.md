@@ -135,4 +135,36 @@ sudo systemctl enable httpd
 [vagrant@localhost html]$ curl http://192.168.1.215
 hello world
 ```
+## Copia un file sulla macchina tramite scp rsync
+
+```
+ale@mint ~/Desktop $ dd if=/dev/zero of=/home/ale/Desktop/file bs=1024 count=100000
+100000+0 records in
+100000+0 records out
+102400000 bytes (102 MB, 98 MiB) copied, 0,229363 s, 446 MB/s
+```
+
+```
+ale@mint ~/Desktop $ ls
+total 192M
+-rw-rw-r--  1 ale ale    0 Dec  9  2019 ...
+-rw-rw-r--  1 ale ale  98M Mar 10 10:15 file
+```
+
+```
+ale@mint ~/Desktop $ scp file vagrant@192.168.1.215:/home/vagrant
+vagrant@192.168.1.215's password: 
+file                                                                                                                                  100%   98MB  97.7MB/s   00:01   
+```
+## Crea sul macchina un archivio con tar e gzip
+
+```
+[vagrant@localhost ~]$ tar cvfz file.tgz file
+file
+```
+
+```
+[vagrant@localhost ~]$ ls
+file  file.tgz  prova.txt
+```
 
